@@ -1,0 +1,52 @@
+<?php
+ /*coded by R4D3N G0Z4LL
+ MASUKAN LIST ADMINNYA LANGSUNG*/
+
+echo 
+"\e[36m#############################################################
+                    \e[91mAuthor : R4D3N GOZ4LL      
+  \e[91mINDONESIA SECURITY LITE    
+                         \e[91mLITE FINDER
+\e[36m#############################################################
+\e[93m>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
+
+/*Ambil web dan ambil list*/
+echo "Input your target : ";
+$target = trim(fgets(STDIN));
+echo "Input admin directory list : ";
+$list = trim(fgets(STDIN));
+if(!preg_match("/^http:\/\//",$target) AND 
+!preg_match("/^https:\/\//",$target)){
+    $targets = "http://$target";
+}else{
+    $targets = $target;
+}
+
+/*Membuka dan mengeluarkan*/
+$open = fopen("$list","r");
+$size = filesize("$list");
+$read = fread($open,$size);
+$lists = explode("\r\n",$read);
+
+
+/*Eksekusi target via culr*/
+foreach($lists as $login){
+    $admins = "$targets/$login";
+   
+    $ch = curl_init("$admins");
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 
+1);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 
+1);
+    curl_exec($ch);
+    $httpcode = curl_getinfo($ch, 
+CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    if($httpcode == 200){
+        echo "\n\n Testing $admins => OK\n";
+    }else{
+        echo "\n Testing $admins => Bukan disini";
+    }
+}
+
+?>
